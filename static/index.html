@@ -11,8 +11,9 @@
 
 <script type="text/javascript">
     $(function() {
+        var jpg1 = "static/image/morph01.jpg";
         $('canvas#left').drawImage({
-            source: "static/faces/01.jpg",
+            source: jpg1,
             x: 300, y: 300
         });
 
@@ -36,10 +37,6 @@
                 x1: lastX, y1: lastY,
                 x2: currentX, y2: currentY
             });
-            lastX = currentX;
-            lastY = currentY;
-
-
             lines.push([lastX, lastY, currentX, currentY]);
         });
 
@@ -47,8 +44,8 @@
             var message = {};
             if (lines)
                 message['lines'] = lines.join(" ");
-            message['left'] = '01.jpg';
-            message['right'] = '01.jpg';
+            message['left'] = jpg1;
+            message['right'] = jpg1;
 
             $.ajax({
                 type: "POST",
