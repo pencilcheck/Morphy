@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html 5>
+<head>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Face Morphing</title>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+<script type="text/javascript" src="static/jcanvas.min.js"></script>
+
+<script type="text/javascript">
+    $(function() {
+        $('canvas#left').drawImage({
+            source: "static/faces/01.jpg",
+            x: 300, y: 300
+        });
+
+        var lines = [];
+
+        var lastX = 0, lastY = 0;
+        var currentX = 0, currentY = 0;
+        $('canvas#left').mousedown(function(e) {
+            lastX = e.clientX;
+            lastY = e.clientY;
+        });
+        $('canvas#left').mouseup(function(e) {
+            currentX = e.pageX;
+            currentY = e.pageY;
+
+            $('canvas#left').drawLine({
+                strokeStyle: "#f00",
+                strokeWidth: 5,
+                strokeCap: "round",
+                strokeJoin: "round",
+                x1: lastX, y1: lastY,
+                x2: currentX, y2: currentY
+            });
+            lastX = currentX;
+            lastY = currentY;
+
+
+            lines.push([lastX, lastY, currentX, currentY]);
+        });
+
+        $('input#submit').click(function() {
+            var message = {};
+            if (lines)
+                message['lines'] = lines.join(" ");
+            message['left'] = '01.jpg';
+            message['right'] = '01.jpg';
+
+            $.ajax({
+                type: "POST",
+                url: "/",
+                data: message,
+                success: function(response) {
+                    var results = $.parseJSON(response);
+                    alert(results);
+                }
+            });
+        });
+
+
+        $('img').remove();
+    });
+</script>
+</head>
+
+<body>
+    <img src='faces/01.jpg' />
+    <canvas id="left" width="600" height="500"></canvas>
+    <input type="button" id="submit">
+</body>
+</html>
+
