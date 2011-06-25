@@ -21,6 +21,10 @@
     out image[m1?m2 x n1?n2] * 1
 
 '''
+from glob import glob
+from os.path import splitext
+import Image
+import math
 
 def inputImage (jpg1, jpg2, LineSrc, LineDes, t, p, a, b):
     # set lines
@@ -39,6 +43,7 @@ def inputImage (jpg1, jpg2, LineSrc, LineDes, t, p, a, b):
     #p = 0
     #a = 1
     #b = 2
+    #print t, p, a, b
 
     Line = []
     for i in range(0,n):
@@ -79,6 +84,7 @@ def inputImage (jpg1, jpg2, LineSrc, LineDes, t, p, a, b):
 
     #print Line[i][0][0], Line[i][0][1], Line[i][1][0], Line[i][1][1]
 
+    #print Line
     # ---------- warp ----------
     for x in range(0,newX):
         for y in range(0,newY):
@@ -268,6 +274,7 @@ def inputImage (jpg1, jpg2, LineSrc, LineDes, t, p, a, b):
 
             # ---------- end for new IMAGE ----------
 
+    #nim.save('test2.jpg', quality = 100)
     return nim
 
 

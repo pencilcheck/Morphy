@@ -51,11 +51,11 @@
         var rlastX = 0, rlastY = 0;
         var rcurrentX = 0, rcurrentY = 0;
         $('#right').mousedown(function(e) {
-            rlastX = e.clientX;
+            rlastX = e.clientX - $('#left').width();
             rlastY = e.clientY;
         });
         $('#right').mouseup(function(e) {
-            rcurrentX = e.clientX;
+            rcurrentX = e.clientX - $('#left').width();
             rcurrentY = e.clientY;
 
             $('#right').drawLine({
@@ -77,7 +77,7 @@
                 message['rlines'] = rlines.join(" ");
 
             message['left'] = jpg1;
-            message['right'] = jpg1;
+            message['right'] = jpg2;
 
             $.ajax({
                 type: "POST",
