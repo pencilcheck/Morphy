@@ -1,3 +1,8 @@
+from glob import glob
+from os.path import splitext
+import Image
+import math
+
 import os
 
 import tornado.ioloop
@@ -6,6 +11,8 @@ import tornado.web
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
+import final
+
 class MainHandler(tornado.web.RequestHandler):
 
     def get(self):
@@ -13,8 +20,8 @@ class MainHandler(tornado.web.RequestHandler):
 
     def post(self):
         print self.request.arguments
-
-        self.write(0);
+        #jpg_temp = splitext(jpg1)[0]+"_Resized1.jpg"
+        #nim.save(jpg_temp, quality = 100)
 
 
 settings = {
