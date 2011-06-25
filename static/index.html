@@ -12,24 +12,31 @@
 <script type="text/javascript">
     $(function() {
         var jpg1 = "static/image/morph01.jpg";
-        $('canvas#left').drawImage({
+        var jpg2 = "static/image/morph02.jpg";
+
+        $('#left').drawImage({
             source: jpg1,
-            x: 300, y: 300
+            x: 100, y: 100,
+        });
+        $('#right').drawImage({
+            source: jpg2,
+            x: 100, y: 100,
         });
 
         var lines = [];
+        var rlines = [];
 
         var lastX = 0, lastY = 0;
         var currentX = 0, currentY = 0;
-        $('canvas#left').mousedown(function(e) {
+        $('#left').mousedown(function(e) {
             lastX = e.clientX;
             lastY = e.clientY;
         });
-        $('canvas#left').mouseup(function(e) {
-            currentX = e.pageX;
-            currentY = e.pageY;
+        $('#left').mouseup(function(e) {
+            currentX = e.clientX;
+            currentY = e.clientY;
 
-            $('canvas#left').drawLine({
+            $('#left').drawLine({
                 strokeStyle: "#f00",
                 strokeWidth: 5,
                 strokeCap: "round",
@@ -40,10 +47,35 @@
             lines.push([lastX, lastY, currentX, currentY]);
         });
 
+
+        var rlastX = 0, rlastY = 0;
+        var rcurrentX = 0, rcurrentY = 0;
+        $('#right').mousedown(function(e) {
+            rlastX = e.clientX;
+            rlastY = e.clientY;
+        });
+        $('#right').mouseup(function(e) {
+            rcurrentX = e.clientX;
+            rcurrentY = e.clientY;
+
+            $('#right').drawLine({
+                strokeStyle: "#00f",
+                strokeWidth: 5,
+                strokeCap: "round",
+                strokeJoin: "round",
+                x1: rlastX, y1: rlastY,
+                x2: rcurrentX, y2: rcurrentY
+            });
+            rlines.push([rlastX, rlastY, rcurrentX, rcurrentY]);
+        });
+
         $('input#submit').click(function() {
             var message = {};
             if (lines)
                 message['lines'] = lines.join(" ");
+            if (rlines)
+                message['rlines'] = rlines.join(" ");
+
             message['left'] = jpg1;
             message['right'] = jpg1;
 
@@ -57,16 +89,13 @@
                 }
             });
         });
-
-
-        $('img').remove();
     });
 </script>
 </head>
 
 <body>
-    <img src='faces/01.jpg' />
-    <canvas id="left" width="600" height="500"></canvas>
+    <canvas style="float: left;" id="left" width="300" height="500"></canvas>
+    <canvas style="float: left;" id="right" width="300" height="500"></canvas>
     <input type="button" id="submit">
 </body>
 </html>

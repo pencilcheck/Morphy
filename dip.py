@@ -25,8 +25,14 @@ class MainHandler(tornado.web.RequestHandler):
             tmp = x.split(',')
             line = [[[int(tmp[0]), int(tmp[1])], [int(tmp[2]), int(tmp[3])]]]
             lines.append(line)
-        print line
-        out = final.inputImage(self.request.arguments['left'][0], self.request.arguments['right'][0], lines)
+
+        rlines = []
+        for x in self.request.arguments['lines'][0].split():
+            tmp = x.split(',')
+            rline = [[[int(tmp[0]), int(tmp[1])], [int(tmp[2]), int(tmp[3])]]]
+            rlines.append(rline)
+
+        out = final.inputImage(self.request.arguments['left'][0], self.request.arguments['right'][0], lines, rlines, 0.5, 0, 1, 2)
         out.save('test.jpg', quality = 100)
         #jpg_temp = splitext(jpg1)[0]+"_Resized1.jpg"
         #nim.save(jpg_temp, quality = 100)
