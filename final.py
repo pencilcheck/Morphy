@@ -22,36 +22,42 @@
 
 '''
 
-from glob import glob
-from os.path import splitext
-import Image
-import math
+def inputImage (jpg1, jpg2, LineSrc, LineDes, t, p, a, b):
+    # set lines
+    #LineSrc = [[[50 ,50 ], [30 ,80 ]], \
+    #           [[30 ,80 ], [50 ,110]], \
+    #           [[50 ,110], [80 ,80 ]], \
+    #           [[80 ,80 ], [50 ,50 ]]]
+    #LineDes = [[[60 ,60 ], [20 ,100]], \
+    #           [[20 ,100], [60 ,140]], \
+    #           [[60 ,140], [100,100]], \
+    #           [[100,100], [60 ,60 ]]]
 
-def inputImage (jpg1, jpg2, LineSrc):
+    # --- parameters ---
+    n = len(LineSrc)
+    #t = 0.5
+    #p = 0
+    #a = 1
+    #b = 2
+
+    Line = []
+    for i in range(0,n):
+        Line.append([[0,0],[0,0]])
+    
     # open a graph and print its information
     im1 = Image.open(jpg1)
     im2 = Image.open(jpg2)
     
     # --- declare the new IMAGE width and height ---
-    if int(im1.size[0]) > int(im2.size[0]) :
-        tempSizeX = int(im1.size[0])
-    else :
-        tempSizeX = int(im2.size[0])
-    if int(im1.size[1]) > int(im2.size[1]) :
-        tempSizeY = int(im1.size[1])
-    else :
-        tempSizeY = int(im2.size[1])
-    
-    newX = tempSizeX
-    newY = tempSizeY
-    
-    #print newX, newY
-    
+    if int(im1.size[0]) > int(im2.size[0]) : newX = int(im1.size[0])
+    else :                                   newX = int(im2.size[0])
+    if int(im1.size[1]) > int(im2.size[1]) : newY = int(im1.size[1])
+    else :                                   newY = int(im2.size[1])
+
     # --- new object ---
     nim1 = Image.new(im1.mode, [im1.size[0], im1.size[1]], None)
     nim2 = Image.new(im2.mode, [im2.size[0], im2.size[1]], None)
     nim  = Image.new(im1.mode, [newX       , newY       ], None)
-    #print nim.mode, nim.size, nim.format
     
     # --- load model ---
     ipixel1 = im1.load()
@@ -63,28 +69,6 @@ def inputImage (jpg1, jpg2, LineSrc):
     # --- set the width and height ---
     w2 = nim.size[0]
     h2 = nim.size[1]
-
-    # --- parameters ---
-    n = 4
-    t = 0.5
-    p = 0
-    a = 1
-    b = 2
-
-    # read
-    #LineSrc = [[[50 ,50 ], [30 ,80 ]], \
-    #           [[30 ,80 ], [50 ,110]], \
-    #           [[50 ,110], [80 ,80 ]], \
-    #           [[80 ,80 ], [50 ,50 ]]]
-    LineDes = [[[60 ,60 ], [20 ,100]], \
-               [[20 ,100], [60 ,140]], \
-               [[60 ,140], [100,100]], \
-               [[100,100], [60 ,60 ]]]
-
-    Line = [[[0,0],[0,0]], \
-            [[0,0],[0,0]], \
-            [[0,0],[0,0]], \
-            [[0,0],[0,0]]]
 
     # ---------- interpolation ----------
     for i in range(0,n): # t -> time
@@ -98,7 +82,6 @@ def inputImage (jpg1, jpg2, LineSrc):
     # ---------- warp ----------
     for x in range(0,newX):
         for y in range(0,newY):
-    
             # ---------- Source ----------
             sum_x     = 0
             sum_y     = 0
@@ -163,8 +146,6 @@ def inputImage (jpg1, jpg2, LineSrc):
             if yFinalSrc > im1.size[1]-2:
                yFinalSrc = im1.size[1]-2
 
-            #print xFinalSrc, yFinalSrc
-           
             # ---------- bilinear interpolation ----------
             # left-top
             x_temp = int(xFinalSrc)
@@ -181,12 +162,9 @@ def inputImage (jpg1, jpg2, LineSrc):
             D = ipixel1[x_temp+1, y_temp+1]
 
             # update three colors
-            Red   = (int)(A[0]*(1-w)*(1-h) + B[0]*(w)*(1-h) + \
-                          C[0]*(1-w)*(h)   + D[0]*(w)*(h))
-            Green = (int)(A[1]*(1-w)*(1-h) + B[1]*(w)*(1-h) + \
-                          C[1]*(1-w)*(h)   + D[1]*(w)*(h))
-            Blue  = (int)(A[2]*(1-w)*(1-h) + B[2]*(w)*(1-h) + \
-                          C[2]*(1-w)*(h)   + D[2]*(w)*(h))
+            Red   = (int)(A[0]*(1-w)*(1-h) + B[0]*(w)*(1-h) + C[0]*(1-w)*(h)   + D[0]*(w)*(h))
+            Green = (int)(A[1]*(1-w)*(1-h) + B[1]*(w)*(1-h) + C[1]*(1-w)*(h)   + D[1]*(w)*(h))
+            Blue  = (int)(A[2]*(1-w)*(1-h) + B[2]*(w)*(1-h) + C[2]*(1-w)*(h)   + D[2]*(w)*(h))
 
             # update the pixel
             opixel1[xFinalSrc, yFinalSrc] = (Red, Green, Blue)
@@ -273,12 +251,9 @@ def inputImage (jpg1, jpg2, LineSrc):
             D = ipixel2[x_temp+1, y_temp+1]
 
             # update three colors
-            Red   = (int)(A[0]*(1-w)*(1-h) + B[0]*(w)*(1-h) + \
-                          C[0]*(1-w)*(h)   + D[0]*(w)*(h))
-            Green = (int)(A[1]*(1-w)*(1-h) + B[1]*(w)*(1-h) + \
-                          C[1]*(1-w)*(h)   + D[1]*(w)*(h))
-            Blue  = (int)(A[2]*(1-w)*(1-h) + B[2]*(w)*(1-h) + \
-                          C[2]*(1-w)*(h)   + D[2]*(w)*(h))
+            Red   = (int)(A[0]*(1-w)*(1-h) + B[0]*(w)*(1-h) + C[0]*(1-w)*(h)   + D[0]*(w)*(h))
+            Green = (int)(A[1]*(1-w)*(1-h) + B[1]*(w)*(1-h) + C[1]*(1-w)*(h)   + D[1]*(w)*(h))
+            Blue  = (int)(A[2]*(1-w)*(1-h) + B[2]*(w)*(1-h) + C[2]*(1-w)*(h)   + D[2]*(w)*(h))
 
             # update the pixel
             opixel2[xFinalDes,yFinalDes] = (Red, Green, Blue)
