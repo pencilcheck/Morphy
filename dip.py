@@ -21,22 +21,24 @@ class MainHandler(tornado.web.RequestHandler):
     def post(self):
         print self.request.arguments
         lines = []
-        for x in self.request.arguments['lines'][0].split():
-            tmp = x.split(',')
-            line = [[float(tmp[0]), float(tmp[1])], [float(tmp[2]), float(tmp[3])]]
-            lines.append(line)
-        #print lines
+	if 'lines' in self.request.arguments:
+		for x in self.request.arguments['lines'][0].split():
+		    tmp = x.split(',')
+		    line = [[float(tmp[0]), float(tmp[1])], [float(tmp[2]), float(tmp[3])]]
+		    lines.append(line)
+		#print lines
 
         rlines = []
-        for x in self.request.arguments['rlines'][0].split():
-            tmp = x.split(',')
-            rline = [[float(tmp[0]), float(tmp[1])], [float(tmp[2]), float(tmp[3])]]
-            rlines.append(rline)
+	if 'rlines' in self.request.arguments:
+		for x in self.request.arguments['rlines'][0].split():
+		    tmp = x.split(',')
+		    rline = [[float(tmp[0]), float(tmp[1])], [float(tmp[2]), float(tmp[3])]]
+		    rlines.append(rline)
 
         #print rlines
 
         out = final.inputImage(self.request.arguments['left'][0], self.request.arguments['right'][0], lines, rlines, 0.5, 1, 1, 2)
-        out.save('test.jpg', quality = 100)
+        #out.save('test.jpg', quality = 100)
         #jpg_temp = splitext(jpg1)[0]+"_Resized1.jpg"
         #nim.save(jpg_temp, quality = 100)
 
